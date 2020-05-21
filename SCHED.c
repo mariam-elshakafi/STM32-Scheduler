@@ -1,3 +1,14 @@
+/**
+ * @file SCHED.c
+ * @author Mariam El-Shakafi (mariam.elshakafi@gmail.com)
+ * @brief This is the implementation file for the scheduler
+ * @version 0.1
+ * @date 2020-04-7
+ * 
+ * @copyright Copyright (c) 2020
+ * 
+ */
+
 #include "STD_TYPES.h"
 
 #include "RCC.h"
@@ -18,6 +29,10 @@ static volatile u8 OS_FLAG = 0;
 
 extern const SysTask_Info sysTasks_cfg[SCHED_MAX_TASK_NUM];
 
+/**
+ * @brief This function adds a defined task to the scheduler array to be considered during runtime.
+ * 
+ */
 static void SCHED_createTask (const SysTask_Info *task)
 {
   if (task)
@@ -28,6 +43,10 @@ static void SCHED_createTask (const SysTask_Info *task)
   }
 }
 
+/**
+ * @brief This is the main implementation of the scheduling mechanism, called when OS_FLAG = 1.
+ * 
+ */
 static void SCHED_schedule(void)
 {
   u32 currentTask = 0;
@@ -42,14 +61,21 @@ static void SCHED_schedule(void)
   }
 }
 
-
+/**
+ * @brief This prevents system from being stuck in handler mode. 
+ *        Called each tick to inform the system that the scheduler needs to run.
+ * 
+ */
 static void SCHED_setFlag(void)
 {
   OS_FLAG = 1;
 }
 
 
-
+/**
+ * @brief This API is used to initialize scheduler
+ * 
+ */
 void SCHED_init(void)
 {
   u32 currentTask = 0;
@@ -86,7 +112,11 @@ void SCHED_init(void)
 }
 
 
-
+/**
+ * @brief This API starts scheduling.
+ * @note This must be called last after all initializations are finished, as system will enter an infinite loop.
+ * 
+ */
 void SCHED_start(void)
 {
   while(1)
